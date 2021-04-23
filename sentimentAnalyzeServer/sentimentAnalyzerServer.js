@@ -26,7 +26,7 @@ app.get("/url/emotion", async (req, res) => {
             }
         });
 
-        return res.send(response.result.emotion);
+        return res.send(response.result.emotion.document);
     } catch(e) {
         return res.send(e);
     }
@@ -43,7 +43,7 @@ app.get("/url/sentiment", async (req,res) => {
             }
         });
 
-        return res.send(response.result.sentiment);
+        return res.send(response.result.sentiment.document);
     } catch(e) {
         return res.send(e);
     }
@@ -60,7 +60,7 @@ app.get("/text/emotion", async (req, res) => {
             }
         });
 
-        return res.send(response.result.emotion);
+        return res.send(response.result.emotion.document);
     } catch(e) {
         return res.send(e);
     }
@@ -77,7 +77,7 @@ app.get("/text/sentiment", async (req, res) => {
             }
         });
 
-        return res.send(response.result.sentiment);
+        return res.send(response.result.sentiment.document);
     } catch(e) {
         return res.send(e);
     }
