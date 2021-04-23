@@ -1,5 +1,9 @@
 const express = require('express');
+const dotenv = require('dotenv');
+dotenv.config();
+
 const app = new express();
+const nlu = getNLUInstance();
 
 function getNLUInstance() {
     let api_key = process.env.API_KEY;
@@ -10,11 +14,11 @@ function getNLUInstance() {
 
     const naturalLanguageUnderstanding = new NaturalLanguageUnderstandingV1({
         version: '2020-08-01',
-        authenticator: new IamAuthenticator({
-            apikey: api_key,
-        }),
+        authenticator: new IamAuthenticator({ apikey: api_key }),
         serviceUrl: api_url,
     });
+
+    return naturalLanguageUnderstanding;
 }
 
 app.use(express.static('client'))
@@ -26,37 +30,72 @@ app.get("/",(req,res)=>{
     res.render('index.html');
   });
 
-app.get("/url/emotion", (req,res) => {
+app.get("/url/emotion", async (req, res) => {
+    const url = req.query.url;
 
-    return res.send({"happy":"90","sad":"10"});
+    try {
+        const response = await nlu.analyze({
+            url,
+            features: {
+                emotion: {}
+            }
+        });
+
+        return res.send(response.result.emotion);
+    } catch(e) {
+        return res.send(e);
+    }
 });
 
-app.get("/url/sentiment", (req,res) => {
-    return res.send("url sentiment for "+req.query.url);
+app.get("/url/sentiment", async (req,res) => {
+    const url = req.query.url;
+
+    try {
+        const response = await nlu.analyze({
+            url,
+            features: {
+                sentiment: {}
+            }
+        });
+
+        return res.send(response.result.sentiment);
+    } catch(e) {
+        return res.send(e);
+    }
 });
 
-app.get("/text/emotion", (req,res) => {
-    return res.send({"happy":"10","sad":"90"});
+app.get("/text/emotion", async (req, res) => {
+    const text = req.query.text;
+
+    try {
+        const response = await nlu.analyze({
+            text,
+            features: {
+                emotion: {}
+            }
+        });
+
+        return res.send(response.result.emotion);
+    } catch(e) {
+        return res.send(e);
+    }
 });
 
-app.get("/text/sentiment", (req,res) => {
-    return res.send("text sentiment for "+req.query.text);
-});
+app.get("/text/sentiment", async (req, res) => {
+    const text = req.query.text;
 
-app.get("/url/emotion", (req, res) => {
-// TODO
-});
+    try {
+        const response = await nlu.analyze({
+            text,
+            features: {
+                sentiment: {}
+            }
+        });
 
-app.get("/url/sentiment", (req, res) => {
-// TODO    
-});
-
-app.get("/text/emotion", (req, res) => {
-// TODO
-});
-
-app.get("/text/sentiment", (req, res) => {
-// TODO
+        return res.send(response.result.sentiment);
+    } catch(e) {
+        return res.send(e);
+    }
 });
 
 let server = app.listen(8080, () => {
