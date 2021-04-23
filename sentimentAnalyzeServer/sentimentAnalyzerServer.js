@@ -43,6 +43,22 @@ app.get("/text/sentiment", (req,res) => {
     return res.send("text sentiment for "+req.query.text);
 });
 
+app.get("/url/emotion", (req, res) => {
+// TODO
+});
+
+app.get("/url/sentiment", (req, res) => {
+// TODO    
+});
+
+app.get("/text/emotion", (req, res) => {
+// TODO
+});
+
+app.get("/text/sentiment", (req, res) => {
+// TODO
+});
+
 let server = app.listen(8080, () => {
     console.log('Listening', server.address().port)
 })
